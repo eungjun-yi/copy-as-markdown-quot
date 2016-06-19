@@ -1,0 +1,11 @@
+{
+   "background": {
+      "scripts": [ "background.js" ]
+   },
+   "description": "Copy text in web page as markdown quotation",
+   "manifest_version": 2,
+   "minimum_chrome_version": "24",
+   "name": "Copy as Markdown Quotation",
+   "permissions": [ "tabs", "storage", "contextMenus", "notifications", "http://*/", "https://*/" ],
+   "version": "0.1.0"
+}
