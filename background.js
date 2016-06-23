@@ -12,16 +12,28 @@ var get_selection = function() {
         || (parent && parent.name)
         || (sibling && sibling.name)
         || (nephew && nephew.name);
+    var whiteSpace = (parent && window.getComputedStyle(parent)['white-space']);
+    var pre = (whiteSpace && whiteSpace.toLowerCase() == 'pre');
+    var index;
+    var ext;
+
+    // Remove fragment from the url
+    index = uri.lastIndexOf('#');
+    uri = index >= 0 ? uri.substring(0, index) : uri;
+
+    // Get extension from the url
+    index = uri.lastIndexOf('.');
+    ext = index >= 0 ? uri.substring(index + 1) : '';
 
     if (frag) {
-        var index = uri.lastIndexOf('#');
-        uri = index >= 0 ? uri.substring(0, index) : uri;
         uri += '#' + frag;
     }
 
     return {
         text: text,
-        uri: uri
+        uri: uri,
+        pre: pre,
+        ext: ext
     };
 }
 
@@ -31,12 +43,16 @@ var copy_as_markdown_quot = function (args) {
     }, function(selections) {
         var text = selections[0].text.trim();
         var uri = selections[0].uri;
+        var pre = selections[0].pre;
+        var ext = selections[0].ext;
         if (text) {
             lines = text.split('\n');
-            result = ''
+            result = '';
+            if (pre) result += '> ```' + ext + '\n';
             for (var i = 0; i < lines.length; i++) {
                 result += '> ' + lines[i] + '\n';
             }
+            if (pre) result += '> ```\n'
             result += '>\n> -- ' + uri;
             copyTextToClipboard(result);
         }
