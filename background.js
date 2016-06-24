@@ -4,18 +4,43 @@ var get_selection = function() {
     var node = selection.anchorNode;
     var uri = node.baseURI;
     var parent = node.parentElement;
-    var sibling = parent ? parent.children[0] : null;
-    var nephew = sibling ? sibling.children[0] : null;
-    var frag = (parent && parent.id)
-        || (sibling && sibling.id)
-        || (nephew && nephew.id)
-        || (parent && parent.name)
-        || (sibling && sibling.name)
-        || (nephew && nephew.name);
     var whiteSpace = (parent && window.getComputedStyle(parent)['white-space']);
     var pre = (whiteSpace && whiteSpace.toLowerCase() == 'pre');
     var index;
     var ext;
+    var get_frag = function(parent) {
+        var frag, sibling, nephew;
+
+        if (!parent) {
+            return null;
+        }
+
+        frag = parent.id || parent.name;
+
+        if (frag) {
+            return frag;
+        }
+
+        sibling = parent.previousSibling;
+
+        while(sibling) {
+            frag = sibling.id || sibling.name;
+
+            if (frag) {
+                return frag;
+            }
+
+            nephew = sibling.children && sibling.children[0];
+            frag = nephew && (nephew.id || nephew.name);
+
+            if (frag) {
+                return frag;
+            }
+
+            sibling = sibling.previousSibling;
+        }
+    }
+    var frag = get_frag(parent);
 
     // Remove fragment from the url
     index = uri.lastIndexOf('#');
