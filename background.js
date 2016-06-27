@@ -66,7 +66,7 @@ var copy_as_markdown_quot = function (args) {
     chrome.tabs.executeScript( {
           code: "(" + get_selection + ")();"
     }, function(selections) {
-        var text = selections[0].text.trim();
+        var text = selections[0].text.replace(/^(\s*\n)*/,"").replace(/[\s\n]*$/, '');
         var uri = selections[0].uri;
         var pre = selections[0].pre;
         var ext = selections[0].ext;
