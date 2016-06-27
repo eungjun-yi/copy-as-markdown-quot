@@ -41,14 +41,17 @@ var get_selection = function() {
         }
     }
     var frag = get_frag(parent) || get_frag(parent.parentElement);
+    var fileName;
 
     // Remove fragment from the url
     index = uri.lastIndexOf('#');
     uri = index >= 0 ? uri.substring(0, index) : uri;
 
     // Get extension from the url
-    index = uri.lastIndexOf('.');
-    ext = index >= 0 ? uri.substring(index + 1) : '';
+    index = uri.lastIndexOf('/');
+    fileName = index >= 0 ? uri.substring(index + 1) : '';
+    index = fileName.lastIndexOf('.');
+    ext = index >= 0 ? fileName.substring(index + 1) : '';
 
     if (frag) {
         uri += '#' + frag;
