@@ -1,7 +1,7 @@
 var get_selection = function() {
     var selection = document.getSelection();
     var text = selection.toString();
-    var node = selection.anchorNode;
+    var node = selection.getRangeAt(0).startContainer;
     var uri = node.baseURI;
     var parent = node.parentElement;
     var whiteSpace = (parent && window.getComputedStyle(parent)['white-space']);
@@ -40,7 +40,7 @@ var get_selection = function() {
             sibling = sibling.previousSibling;
         }
     }
-    var frag = get_frag(parent);
+    var frag = get_frag(parent) || get_frag(parent.parentElement);
 
     // Remove fragment from the url
     index = uri.lastIndexOf('#');
