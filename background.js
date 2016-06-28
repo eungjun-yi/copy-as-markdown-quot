@@ -40,8 +40,13 @@ var get_selection = function() {
             sibling = sibling.previousSibling;
         }
     }
-    var frag = get_frag(parent) || get_frag(parent.parentElement);
     var fileName;
+    var frag;
+
+    while(!frag && parent) {
+        frag = get_frag(parent);
+        parent = parent.parentElement;
+    }
 
     // Remove fragment from the url
     index = uri.lastIndexOf('#');
