@@ -65,11 +65,19 @@ var get_selection = function() {
     };
 }
 
+var ltrim_lines = function(str) {
+    return str.replace(/^(\s*\n)*/, '');
+}
+
+var rtrim = function(str) {
+    return str.replace(/[\s\n]*$/, '');
+}
+
 var copy_as_markdown_quot = function (args) {
     chrome.tabs.executeScript( {
           code: "(" + get_selection + ")();"
     }, function(selections) {
-        var text = selections[0].text.replace(/^(\s*\n)*/,"").replace(/[\s\n]*$/, '');
+        var text = rtrim(ltrim_lines(selections[0].text));
         var uri = selections[0].uri;
         var pre = selections[0].pre;
         var ext = selections[0].ext;
