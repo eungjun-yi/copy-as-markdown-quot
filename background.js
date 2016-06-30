@@ -2,7 +2,7 @@ var get_selection = function() {
     var selection = document.getSelection();
     var text = selection.toString();
     var node = selection.getRangeAt(0).startContainer;
-    var uri = node.baseURI;
+    var uri = node.baseURI || document.documentURI;
     var parent = node.parentElement;
     var whiteSpace = (parent && window.getComputedStyle(parent)['white-space']);
     var pre = (whiteSpace && whiteSpace.toLowerCase() == 'pre');
