@@ -8,6 +8,11 @@ In Chrome browser, copy text and paste it as markdown quotation.
 Install
 -------
 
+[Install the extension from Chrome Web Store](https://chrome.google.com/webstore/detail/copy-as-markdown-quotatio/oifbkkngkecdhnohciofdofiihdjciip).
+
+Install for developers
+----------------------
+
 1. Open `chrome://extensions/` with your Chrome browser.
 2. Check 'Developer mode'
 3. Add this directory as a chrome extension.
