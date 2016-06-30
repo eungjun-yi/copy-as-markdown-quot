@@ -7,5 +7,5 @@
    "minimum_chrome_version": "24",
    "name": "Copy as Markdown Quotation",
    "permissions": [ "tabs", "storage", "contextMenus", "notifications", "http://*/", "https://*/" ],
-   "version": "0.3.0"
+   "version": "0.3.1"
 }
