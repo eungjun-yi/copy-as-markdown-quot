@@ -63,7 +63,7 @@ var get_selection = function() {
     // original one was not semantically significant.
     index = uri.lastIndexOf('#');
     orig_frag = index >= 0 ? uri.substring(index + 1) : null;
-    if (orig_frag && orig_frag.indexOf('/') < 0) { // Assume the fragment is siginificant if it contains '/'.
+    if (!orig_frag || orig_frag.indexOf('/') < 0) { // Assume the fragment is siginificant if it contains '/'.
         uri = index >= 0 ? uri.substring(0, index) : uri;
         while(!frag && parent) {
             frag = get_frag(parent);
