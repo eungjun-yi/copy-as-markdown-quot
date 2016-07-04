@@ -10,5 +10,5 @@
                "48": "icon48.png",
               "128": "icon128.png" },
    "permissions": [ "tabs", "storage", "contextMenus", "notifications", "http://*/", "https://*/" ],
-   "version": "0.4.0"
+   "version": "0.4.1"
 }
