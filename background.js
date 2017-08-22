@@ -116,6 +116,11 @@ var get_selection = function() {
     };
 }
 
+var validTags = [
+    'p', 'br', 'hr', 'b', 'pre', 'img', 'code', 'blockquote', 'ol', '', 'h1', 'h2', 'h3',
+    'h4', 'h5', 'a', 'strong', 'em', 'a', 'i', 'em', 'ul', 'li',
+];
+
 // The toMarkdown parser leaves tags that it cannot parse as-is. We filter out
 // the most common ones.
 function toCleanMarkdown(html) {
@@ -128,7 +133,11 @@ function toCleanMarkdown(html) {
                 }
             },
             {
-                filter: 'span',
+                filter: function (node) {
+                    return validTags.indexOf(
+                        node.nodeName.toLowerCase()
+                    ) === -1;
+                },
                 replacement: function (content) {
                     return content;
                 }
