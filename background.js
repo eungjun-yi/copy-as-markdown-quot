@@ -1,6 +1,32 @@
 var get_selection = function() {
     var selection = document.getSelection();
-    var text = selection.toString();
+
+    function getSelectionRepresentation() {
+        var textRepresentation = {
+            type: 'text',
+            value: selection.toString()
+        };
+
+        if (!selection.rangeCount) {
+            return textRepresentation;
+        }
+
+        var container = document.createElement("div");
+        for (var i = 0, len = selection.rangeCount; i < len; ++i) {
+            container.appendChild(selection.getRangeAt(i).cloneContents());
+        }
+
+        if (container.innerHTML.replace(/\s/g,"") === "") {
+            return textRepresentation;
+        }
+
+        return {
+            type: 'html',
+            value: container.innerHTML,
+        };
+    }
+
+    // Do the rest
     var node = selection.getRangeAt(0).startContainer;
     var uri = node.baseURI || document.documentURI;
     var parent = node.parentElement;
@@ -19,6 +45,7 @@ var get_selection = function() {
         if (elem.className.toLowerCase().split(' ').indexOf('codemirror') >= 0) {
             return true;
         }
+
 
         return false;
     }
@@ -82,40 +109,68 @@ var get_selection = function() {
     }
 
     return {
-        text: text,
+        selection: getSelectionRepresentation(),
         uri: uri,
         pre: pre,
         ext: ext
     };
 }
 
-var ltrim_lines = function(str) {
-    return str.replace(/^(\s*\n)*/, '');
+// The toMarkdown parser leaves tags that it cannot parse as-is. We filter out
+// the most common ones.
+function toCleanMarkdown(html) {
+    return toMarkdown(html, {
+        converters: [
+            {
+                filter: 'div',
+                replacement: function (content) {
+                    return '\n\n' + content + '\n\n';
+                }
+            },
+            {
+                filter: 'span',
+                replacement: function (content) {
+                    return content;
+                }
+            },
+        ]
+    });
 }
 
-var rtrim = function(str) {
-    return str.replace(/[\s\n]*$/, '');
+function toMarkdownQuote(markdown) {
+    return markdown.split('\n').map(function (line) {
+        return '> ' + line;
+    }).join('\n');
+}
+
+function toMarkdownCodeBlock(markdown, extension) {
+    return [
+        '> ```' + extension + '\n',
+        markdown,
+        '> ```\n',
+    ].join('');
 }
 
 var copy_as_markdown_quot = function (args) {
     chrome.tabs.executeScript( {
           code: "(" + get_selection + ")();"
     }, function(selections) {
-        var text = rtrim(ltrim_lines(selections[0].text));
+        var selection = selections[0].selection;
         var uri = selections[0].uri;
         var pre = selections[0].pre;
         var ext = selections[0].ext;
-        if (text) {
-            lines = text.split('\n');
-            result = '';
-            if (pre) result += '> ```' + ext + '\n';
-            for (var i = 0; i < lines.length; i++) {
-                result += '> ' + lines[i] + '\n';
-            }
-            if (pre) result += '> ```\n'
-            result += '>\n> -- ' + uri;
-            copyTextToClipboard(result);
+
+        var result = selection.type === 'html'
+            ? toMarkdownQuote(toCleanMarkdown(selection.value))
+            : selection.value;
+
+        if (pre) {
+            result = toMarkdownCodeBlock(result, ext);
         }
+
+        result = result + '\n>\n> -- ' + uri;
+
+        copyTextToClipboard(result);
     });
 };
 
