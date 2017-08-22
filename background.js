@@ -116,14 +116,12 @@ var get_selection = function() {
     };
 }
 
-var validTags = [
-    'p', 'br', 'hr', 'b', 'pre', 'img', 'code', 'blockquote', 'ol', '', 'h1', 'h2', 'h3',
-    'h4', 'h5', 'a', 'strong', 'em', 'a', 'i', 'em', 'ul', 'li',
-];
-
-// The toMarkdown parser leaves tags that it cannot parse as-is. We filter out
-// the most common ones.
 function toCleanMarkdown(html) {
+    var validTags = [
+        'p', 'br', 'hr', 'b', 'pre', 'img', 'code', 'blockquote', 'ol', '', 'h1', 'h2', 'h3',
+        'h4', 'h5', 'a', 'strong', 'em', 'a', 'i', 'em', 'ul', 'li',
+    ];
+
     return toMarkdown(html, {
         converters: [
             {
