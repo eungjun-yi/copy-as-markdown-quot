@@ -1,6 +1,16 @@
 var get_selection = function() {
     var selection = document.getSelection();
 
+    function domVisitor(node, functionName) {
+        functionName(node);
+        node = node.firstChild;
+
+        while (node) {
+            domVisitor(node, functionName);
+            node = node.nextSibling;
+        }
+    }
+
     function getSelectionRepresentation() {
         var textRepresentation = {
             type: 'text',
@@ -11,14 +21,26 @@ var get_selection = function() {
             return textRepresentation;
         }
 
+        // Grap the HTML
         var container = document.createElement("div");
         for (var i = 0, len = selection.rangeCount; i < len; ++i) {
             container.appendChild(selection.getRangeAt(i).cloneContents());
         }
 
+        // The HTML part is empty: but it could well be that the browser's
+        // HTML to text engine did a better job!
         if (container.innerHTML.replace(/\s/g,"") === "") {
             return textRepresentation;
         }
+
+        // Make all links absolute
+        domVisitor(container, function (node) {
+            if (node.tagName !== 'A') {
+                return;
+            }
+
+            node.href = node.href;
+        });
 
         return {
             type: 'html',
