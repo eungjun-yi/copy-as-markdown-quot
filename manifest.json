@@ -1,6 +1,9 @@
 {
    "background": {
-      "scripts": [ "background.js" ]
+      "scripts": [
+        "lib/to-markdown.js",
+        "background.js"
+      ]
    },
    "description": "Copy text in web page as markdown quotation",
    "manifest_version": 2,
